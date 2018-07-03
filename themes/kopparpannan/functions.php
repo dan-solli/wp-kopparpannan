@@ -16,9 +16,11 @@ add_action('pre_get_posts', 'add_custom_post_type_to_the_loop');
 function setup_semantic_ui () {
   wp_enqueue_style( 'semantic', 'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css' );
   wp_enqueue_style( 'kopparpannan', get_stylesheet_uri() );
+  wp_enqueue_style( 'lightbox2', get_template_directory_uri() . "/assets/css/lightbox.min.css");
 
   wp_enqueue_script( 'semantic', 'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js', array( 'jquery', 'jquery-ui-core' ), '1.0.0', true );
   wp_enqueue_script( 'kopparpannan', get_template_directory_uri() . "/assets/js/kopparpannan.js", array('jquery'), true);
+  wp_enqueue_script('lightbox2', get_template_directory_uri() . "/assets/js/lightbox.min.js", array('jquery'), true);
 }
 add_action( 'wp_enqueue_scripts', 'setup_semantic_ui' );
 
@@ -154,3 +156,105 @@ function signup_event_callback() {
     die();
 }
 */
+
+/////////////////////////////////////////////////////////
+// Attachments 
+/////////////////////////////////////////////////////////
+
+function my_attachments($attachments) {
+    $fields = array(
+        array(
+            'name' => 'bildtext',
+            'type' => 'text',
+            'label' => __('Bildtext', 'attachments'),
+            'default' => 'Bildtext'
+        )
+    );
+
+    $args = array(
+        'label' => 'Bilagor',
+        'post_type' => array('post', 'page', 'kopparpannan-event', 'kopparpannan-whisky'),
+        'position' => 'normal',
+        'priority' => 'high',
+        'filetype' => null,
+        'note' => 'Lägg till bilaga här.',
+        'append' => true,
+        'button_text' => __('Bilägg filer', 'attachments'),
+        'modal_text' => __('Bilägg', 'attachments'),
+        'router' => 'browse',
+        'post_parent' => false,
+        'fields' => $fields
+    );
+    
+    $attachments->register('my_attachments', $args);
+}
+
+add_action('attachments_register', 'my_attachments');
+
+
+    /*
+
+        while ($attachment = $attachments->get()) {
+            echo "ID: ". $attachments->id() . "<br />";
+            echo "Type: " . $attachments->type() . "<br />";
+            echo "Subype: " . $attachments->subtype() . "<br />";
+            echo "URL: " . $attachments->url() . "<br />"; 
+            echo "TN: " . $attachments->image( 'thumbnail' ) . "<br />";
+            echo "FullSrc: " . $attachments->src( 'full' ) . "<br />"; 
+            echo "Filesize: " . $attachments->filesize() . "<br />"; 
+            echo "Title: " . $attachments->field( 'title' ) . "<br />"; 
+            echo "Caption: " . $attachments->field( 'caption' ) . "<br />"; 
+        }
+    */
+
+function __get_attachments($id, $type) {
+    $attachments = new Attachments();
+
+    $search_args = array(
+        'post_id' => $id,
+        'instance' => 'my_attachments',
+        'filetype' => $type
+    );
+
+    $attachments->search('', $search_args);
+
+    if ($attachments->exist()) {
+        return $attachments;
+    }
+    else {
+        return null;
+    }
+}
+
+function get_other_attachments($id) {
+    return __get_attachments($id, 'application');
+}
+
+
+function get_image_attachments($id) {
+    return __get_attachments($id, 'image');
+}
+
+
+function images_in_gallery($id) {
+    $result = get_image_attachments($id);
+    if ($result == null) {
+        return 0;
+    } else {
+        return $result->total();
+    }
+}
+
+function the_attachment_icon($subtype) {
+    // print_r($subtype);
+    switch($subtype) {
+        case 'pdf':
+            echo "red file pdf";
+            break;
+        case 'msword':
+            echo "blue file word";
+            break;
+        default:
+            echo "file outline";
+    }
+}

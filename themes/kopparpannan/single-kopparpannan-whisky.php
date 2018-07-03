@@ -16,22 +16,26 @@
 
 
 					<article id="post-<?php the_ID(); ?>" class="ui raised segments">
+						<div class="ui segment">
+							<div class="content">
+								<div class="header">
+									<h2> 
+										<?php the_title(); ?>
+										<i class="scotland flag"> </i> 
+									</h2>
+								</div>
+							</div>
+						</div>							
 						<div class="ui horizontal raised segments">
 
 <?php if ( has_post_thumbnail() ) { ?>
 							<div class="ui segment">
-<?php 	the_post_thumbnail( 'full', array( 'class'  => 'ui centered tiny image' ) ); ?>
+<?php 	the_post_thumbnail( 'full', array( 'class'  => 'ui centered small image' ) ); ?>
 							</div>
 <?php } ?>
 
 							<div class="ui segment">
 								<div class="content">
-									<div class="header">
-										<h2> 
-											<?php the_title(); ?>
-											<i class="scotland flag"> </i> 
-										</h2>
-									</div>
 									<div class="description">
 										<div class="ui list">
 											<div class="item">
@@ -62,7 +66,9 @@
 													<?php the_field('pris'); echo " / "; the_field('volym'); ?>ml 
 												</div>
 											</div>
-											<div class="ui  horizonal divider"></div>
+										</div>
+										<div class="ui horizonal divider">Omdöme</div>
+										<div class="ui list">
 <?php 
 	$args = array (
 		'post_type' 			=> 'kp-whiskybetyg',

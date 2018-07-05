@@ -14,6 +14,15 @@
 
 <?php while ( have_posts() ) : the_post() ?>
 
+<?php 
+	if (is_future_event() and is_user_signed_up(get_the_ID())) { ?>
+	<div class="ui success message">
+		<div class="header">
+			Du är anmäld till evenemanget!
+		</div>
+		<p> Välkommen! </p>
+	</div>
+<?php } ?>
 <article id="post-<?php the_ID(); ?>" class="raised item"> 
 <?php get_template_part('assets/t/common', 'header');
 			get_template_part('assets/t/common', 'meta');

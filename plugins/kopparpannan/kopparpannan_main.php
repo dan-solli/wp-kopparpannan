@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 define('MY_PLUGIN_PATH', plugin_dir_path(__FILE__));
 
+/*
 register_activation_hook( __FILE__, 'kopparpannan_create_tables' );
 
 function kopparpannan_create_tables() {
@@ -186,3 +187,4 @@ function calculate_signups($id) {
 }
 
 ?>
+*/

@@ -13,8 +13,6 @@
 
 
 <?php while ( have_posts() ) : the_post() ?>
-
-
 					<article id="post-<?php the_ID(); ?>" class="ui raised segments">
 						<div class="ui segment">
 							<div class="content">
@@ -67,7 +65,6 @@
 												</div>
 											</div>
 										</div>
-										<div class="ui horizonal divider">Omdöme</div>
 										<div class="ui list">
 <?php 
 	$args = array (

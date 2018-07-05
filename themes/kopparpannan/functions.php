@@ -1,9 +1,5 @@
 <?php
 
-@ini_set( 'upload_max_size' , '64M' );
-@ini_set( 'post_max_size', '64M');
-@ini_set( 'max_execution_time', '300' );
-
 // Make sure custom post types are added by default to The Loop
 function add_custom_post_type_to_the_loop( $query ) {
 	if ($query->is_home() && $query->is_main_query() ) {
@@ -133,30 +129,6 @@ add_theme_support( 'custom-logo', array(
 ) );
 
 
-/////////////////////////////////////////////////////////////
-
-/*
-add_action('wp_ajax_signup_event', 'signup_event_callback');
-add_action('wp_enqueue_scripts', 'add_signup_scripts');
-
-function add_signup_scripts()
-{
-    wp_enqueue_script('signups-script', get_template_directory_uri() . '/assets/js/signups.js', array('jquery'));
-    wp_localize_script('signups-script', 'signups_data', array(
-        'ajaxurl' => admin_url('admin-ajax.php'),
-        'security' => wp_create_nonce('signups-nonce')) 
-    );
-}
-
-function signup_event_callback() {
-    check_ajax_referer('signups-nonce', 'security');
-
-    $event_id = intval($_POST['event_id']);
-    add_event_anmalan($event_id);
-    die();
-}
-*/
-
 /////////////////////////////////////////////////////////
 // Attachments 
 /////////////////////////////////////////////////////////
@@ -190,22 +162,6 @@ function my_attachments($attachments) {
 }
 
 add_action('attachments_register', 'my_attachments');
-
-
-    /*
-
-        while ($attachment = $attachments->get()) {
-            echo "ID: ". $attachments->id() . "<br />";
-            echo "Type: " . $attachments->type() . "<br />";
-            echo "Subype: " . $attachments->subtype() . "<br />";
-            echo "URL: " . $attachments->url() . "<br />"; 
-            echo "TN: " . $attachments->image( 'thumbnail' ) . "<br />";
-            echo "FullSrc: " . $attachments->src( 'full' ) . "<br />"; 
-            echo "Filesize: " . $attachments->filesize() . "<br />"; 
-            echo "Title: " . $attachments->field( 'title' ) . "<br />"; 
-            echo "Caption: " . $attachments->field( 'caption' ) . "<br />"; 
-        }
-    */
 
 function __get_attachments($id, $type) {
     $attachments = new Attachments();
@@ -257,4 +213,147 @@ function the_attachment_icon($subtype) {
         default:
             echo "file outline";
     }
+}
+
+////////////////////////////////////////////////////
+// Signing up 
+////////////////////////////////////////////////////
+
+add_action('admin_post_signup_for_event', 'signup_user_for_event');
+add_action('admin_post_unsignup_for_event', 'unsignup_user_for_event');
+add_action('admin_post_signup_guest_for_event', 'signup_guest_for_event');
+
+function signup_user_for_event()
+{
+    if (isset($_POST['event_id']) and
+        isset($_POST['signup_nonce']) and 
+        wp_verify_nonce($_POST['signup_nonce'], 
+                        'signup-event-' . $_POST['event_id']))
+    {
+        $postargs = array(
+            'post_author' => $_POST['user_id'],
+            'post_title' => '',
+            'post_content' => '',
+            'post_status' => 'publish',
+            'post_type'   => 'medlemsanmalning',
+            'comment_status' => 'closed',
+            'meta_input' => array(
+                'event' => $_POST['event_id'],
+                'user'  => $_POST['user_id']
+            ),
+        );
+        $post_id = wp_insert_post($postargs, true);
+        if (is_wp_error($post_id)) {
+            echo $post_id->get_error_message();
+        }
+    }
+    header("Location: {$_SERVER['HTTP_REFERER']}");
+    exit;
+}
+
+function unsignup_user_for_event() 
+{
+    if (isset($_POST['event_id']) and
+        isset($_POST['signup_nonce']) and 
+        wp_verify_nonce($_POST['signup_nonce'], 
+                        'signup-event-' . $_POST['event_id']))
+    {
+        $args = array(
+            'post_type' => 'medlemsanmalning',
+            'post_status' => 'publish', 
+            'meta_query' => array(
+                'relation' => 'AND',
+                array(
+                    'key' => 'user',
+                    'value' => $_POST['user_id'],
+                ),
+                array(
+                    'key' => 'event',
+                    'value' =>$_POST['event_id']
+                ),
+            ),
+        );
+        $result = new WP_Query($args);
+        $result->the_post();
+        $id = get_the_ID();
+        wp_delete_post($id, false);
+        wp_reset_postdata();
+    }
+    header("Location: {$_SERVER['HTTP_REFERER']}");
+    exit;
+}
+
+function toggle_signup_guest_for_event()
+{
+    echo "<pre>" + var_dump($_POST) + "</pre>";
+}
+
+function is_user_signed_up($event_id) {
+    $user_id = get_current_user_id();
+
+    $args = array(
+        'post_type' => 'medlemsanmalning',
+        'post_status' => 'publish', 
+        'meta_query' => array(
+            'relation' => 'AND',
+            array(
+                'key' => 'user',
+                'value' => $user_id
+            ),
+            array(
+                'key' => 'event',
+                'value' => $event_id
+            ),
+        ),
+    );
+    $result = new WP_Query($args);
+    $bool = ($result->post_count != 0 ? true : false);
+    wp_reset_postdata();
+    return $bool;
+}
+
+function calculate_signups($id) {
+    $mem_cnt = 0;
+    $gue_cnt = 0;
+
+    $args = array(
+        'post_type' => 'medlemsanmalning',
+        'post_status' => 'publish', 
+        'meta_query' => array(
+            array(
+                'key' => 'event',
+                'value' => $id
+            ),
+        ),
+    );
+    $result = new WP_Query($args);
+    $mem_cnt = $result->post_count;
+    wp_reset_postdata();
+
+    $args = array(
+        'post_type' => 'gastanmalning',
+        'post_status' => 'publish', 
+        'meta_query' => array(
+            array(
+                'key' => 'event',
+                'value' => $id
+            ),
+        ),
+    );
+    $result = new WP_Query($args);
+    $gue_cnt = $result->post_count;
+
+    if ($gue_cnt > 0) {
+        echo $mem_cnt + " + " + $gue_cnt;
+    } else {
+        echo $mem_cnt;
+    }
+}
+
+function is_future_event()
+{
+    $event_time = strtotime(get_field('tid'));
+    $now = time();
+
+    return $event_time > $now;
 }

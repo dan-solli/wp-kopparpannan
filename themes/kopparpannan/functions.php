@@ -313,6 +313,17 @@ function is_user_signed_up($event_id) {
 }
 
 function calculate_signups($id) {
+    $arr = calculate_signup_count($id);
+
+    if ($arr['guests'] > 0) {
+        echo $arr['members'] + " + " + $arr['guests'];
+    } else {
+        echo $arr['members'];
+    }
+
+}
+
+function calculate_signup_count($id) {
     $mem_cnt = 0;
     $gue_cnt = 0;
 
@@ -342,12 +353,13 @@ function calculate_signups($id) {
     );
     $result = new WP_Query($args);
     $gue_cnt = $result->post_count;
+    wp_reset_postdata();
 
-    if ($gue_cnt > 0) {
-        echo $mem_cnt + " + " + $gue_cnt;
-    } else {
-        echo $mem_cnt;
-    }
+    return array(
+        'members' => $mem_cnt, 
+        'guests' => $gue_cnt
+    );
+
 }
 
 function is_future_event()
@@ -356,4 +368,30 @@ function is_future_event()
     $now = time();
 
     return $event_time > $now;
+}
+
+///////////////////////////////////////////////////////
+// has_ ?
+///////////////////////////////////////////////////////
+
+function has_summary() {
+    return (strlen(get_field('summering')) > 0);
+}
+
+function has_whisky() {
+    $args = array( 
+        'post_type' => 'kp-whiskybetyg',
+        'posts_per_page' => -1,
+        'meta_key' => 'prov',
+        'meta_value' => get_the_ID(),
+    );
+    $queue = new WP_Query($args);
+    $bool = ($queue->post_count > 0); 
+    wp_reset_postdata();
+    return $bool;
+}
+
+function has_anmalning() {
+    $arr = calculate_signup_count(get_the_ID());
+    return (arr['guests'] + arr['members'] > 0);
 }

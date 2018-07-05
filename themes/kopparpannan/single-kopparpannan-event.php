@@ -2,8 +2,6 @@
 /**
  * The main whisky showing page
  *
- * This one should move into index.php - maybe!?
- *
  * @package Kopparpannan
  * @since Kopparpannan 0.1
  */

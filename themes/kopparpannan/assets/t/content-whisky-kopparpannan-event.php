@@ -1,3 +1,4 @@
+<?php if (has_whisky()) { ?>   
   <div class="ui horizontal divider"> Provad dryck </div>
   <div class="ui horizontal raised segments">
 
@@ -73,4 +74,4 @@
 ?>
 
 	</div>
-
+<?php } ?>

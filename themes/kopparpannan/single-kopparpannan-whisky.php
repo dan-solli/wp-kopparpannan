@@ -108,8 +108,33 @@
 							<div class="content">
 								<div class="header"> <h2> <i class="quote left icon"> </i> </h2> </div>
 								<div class="description">
-										<blockquote>x"Here is the thing, being a citizen is like being asleep." - Einstein.</blockquote>
-										<blockquote>x"You are about to turn into a party devil. That's right." - Beethoven.</blockquote>
+<?php 
+	$args = array (
+		'post_type' 			=> 'citat',
+		'posts_per_page' 	=> -1,
+		'meta_query'			=> array( array(
+			'key' 		=> 'whisky',
+			'value' 	=> get_the_ID(),
+			'type' 		=> 'NUM',
+			'compare' => '='))
+	);
+
+	$citat_query = new WP_Query( $args );
+	if ($citat_query->have_posts()) {
+		while ($citat_query->have_posts()) {
+			$citat_query->the_post();
+
+			$prov_ob = get_field('event');
+			$user_ob = get_field('user');
+?>									
+									<blockquote>
+											<cite>
+										<?php the_title() ?>
+											</cite><br />
+										<?php echo $user_ob['display_name'] . ", " . 
+										      explode(" ", get_field('tid', $prov_ob))[0]; ?>
+									</blockquote>
+<?php } } ?>									
 								</div>
 							</div>
 						</div>

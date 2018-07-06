@@ -27,9 +27,25 @@
 	if ($prov_query->have_posts()) {
 		while ($prov_query->have_posts()) {
 			$prov_query->the_post();
-			get_template_part('content-medium', 'kopparpannan-event');
-		}
-	}
-  get_footer();	
-?>
+?>			
+			<article id="post-<?php the_ID(); ?>" class="raised item">  
+			<?php get_template_part('assets/t/common', 'header');
+			      get_template_part('assets/t/common', 'meta'); 
+						get_template_part('assets/t/meta', 'kopparpannan-event');
 
+			?> 
+			    <div class="description">
+			      <?php the_content(); ?> 
+			    </div>
+			    <div class="extra">
+			      <?php get_template_part('assets/t/common', 'attachments'); ?>
+			    </div>
+
+			    <?php get_template_part('assets/t/common', 'footer'); ?>
+			  </div>
+			</article>
+
+<?php } 
+		} ?>
+
+<?php get_footer(); ?>

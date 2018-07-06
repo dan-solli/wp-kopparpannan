@@ -396,6 +396,18 @@ function has_anmalning() {
     return (arr['guests'] + arr['members'] > 0);
 }
 
+function has_citat() {
+    $args = array( 
+        'post_type' => 'citat',
+        'posts_per_page' => -1,
+        'meta_key' => 'whisky',
+        'meta_value' => get_the_ID(),
+    );
+    $queue = new WP_Query($args);
+    $bool = ($queue->post_count > 0); 
+    wp_reset_postdata();
+    return $bool;
+}
 
 ///////////////////////////////////////
 // Handle columns in Admin view

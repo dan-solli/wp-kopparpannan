@@ -55,16 +55,33 @@
 					Citat 
 				</div>
 
+<?php $citat_query = new WP_Query(array(
+				'orderby' => 'rand',
+				'posts_per_page' => '1',
+				'post_type' => 'citat'
+			));
+			if ($citat_query->have_posts()) {
+				while ($citat_query->have_posts()) {
+					$citat_query->the_post();
+
+					$whisky_ob = get_field('whisky');
+					$event_ob = get_field('event');
+					$user_ob = get_field('user');
+?>
 				<section class="ui raised card" id="memorable_quotes">
 					<div class="content">
-						<div class="header"> Laphroaig 10 yo</div>
-						<div class="meta"> <i title="Tidpunkt" class="calendar icon"></i> 2014-01-01 </div>
+						<div class="header"> <?php echo $whisky_ob->post_title; ?> </div>
+						<div class="meta"> 
+							<i title="Tidpunkt" class="calendar icon"></i> 
+								<?php echo explode(" ", get_field('tid', $event_ob))[0]; ?> </div>
 						<div class="center aligned description">
 							<i title="Startcitat" class="quote left icon"></i>
-							God som fan
+							<?php the_title(); ?> 
 							<i title="Slutcitat" class="quote right icon"> </i>
 						</div>
 					</div>
 				</section>
+<?php 				}
+			} ?>
 
 			</aside>

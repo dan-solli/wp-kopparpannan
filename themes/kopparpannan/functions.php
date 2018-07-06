@@ -457,6 +457,6 @@ function save_post_citat_title($post_id, $post, $update)
 add_action('save_post_medlemsanmalning', 'save_post_mem_anm_title', 90, 3);
 add_action('save_post_gastanmalning', 'save_post_gue_anm_title', 90, 3);
 add_action('save_post_kp_whiskybetyg', 'save_post_betyg_title', 90, 3);
-add_action('save_post_kp_citat', 'save_post_citat_title', 90, 3);
+add_action('save_post_citat', 'save_post_citat_title', 90, 3);
 
 

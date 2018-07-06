@@ -570,3 +570,52 @@ function add_citat_column_content( $column, $id ) {
     echo $user['display_name'];
   }
 }
+
+// Hantera flaggor vid whisky.
+function the_flag($whisky_id) {
+    //echo "Got: $whisky_id\n";
+    $term = get_field('omrade', $whisky_id);
+    //echo "Term has name: " . $term->name;
+    switch ($term->name) {
+        case 'Finland':
+            $country = 'finland';
+            break;
+        case 'Frankrike':
+            $country = 'france';
+            break;
+        case 'Indien':
+            $country = 'india';
+            break;
+        case 'Japan':
+            $country = 'japan';
+            break;
+        case 'Kanada':
+            $country = 'canada';
+            break;
+        case 'Skottland':
+        case 'Campbeltown':
+        case 'Islay':
+        case 'Islands':
+        case 'Highlands':
+        case 'Lowland':
+        case 'Speyside':
+            $country = 'scotland';
+            break;
+        case 'Sverige':
+            $country = 'sweden';
+            break;
+        case 'Tyskland':
+            $country = 'germany';
+            break;
+        case 'USA':
+            $country = 'us';
+            break;
+        default:
+            $country = null;
+            break;
+    }
+    //echo "Countryflag is: $country";
+    if ($country != null) {
+        echo "<i class=\"$country flag\"> </i>";
+    }
+}

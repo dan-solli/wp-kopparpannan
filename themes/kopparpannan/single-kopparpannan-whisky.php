@@ -2,8 +2,6 @@
 /**
  * The main whisky showing page
  *
- * This one should move into index.php - maybe!?
- *
  * @package Kopparpannan
  * @since Kopparpannan 0.1
  */
@@ -18,8 +16,9 @@
 							<div class="content">
 								<div class="header">
 									<h2> 
-										<?php the_title(); ?>
-										<i class="scotland flag"> </i> 
+										<?php the_title(); 
+													echo " ";
+													the_flag(get_the_ID()); ?>
 									</h2>
 								</div>
 							</div>
@@ -104,6 +103,7 @@
 								</div>
 							</div>
 						</div>
+<?php if (has_citat()) { ?> 								
 						<div class="ui segment">
 							<div class="content">
 								<div class="header"> <h2> <i class="quote left icon"> </i> </h2> </div>
@@ -138,6 +138,7 @@
 								</div>
 							</div>
 						</div>
+<?php } ?> 
 						<div class="ui segment">
 							<div class="content">
 								<div class="header"> <h2> <i class="quote info icon"> </i> </h2> </div>

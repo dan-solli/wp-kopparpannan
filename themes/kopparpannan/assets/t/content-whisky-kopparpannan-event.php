@@ -19,7 +19,7 @@
 			<div class="content">
 				<div class="header"> 
 					<a href="<?php echo get_the_permalink($whisky_ob); ?>">
-						<?php echo get_the_title($whisky_ob); ?> 
+						<?php echo get_the_title($whisky_ob); ?>
 					</a>
 				</div>
 				<?php if (has_post_thumbnail($whisky_ob)) { ?>
@@ -45,7 +45,9 @@
 						<div class="item">
 							<i class="map marker alternate icon"></i>
 							<div class="content">
-								<?php $term = get_field('omrade', $whisky_ob->ID);
+								<?php the_flag($whisky_ob->ID);
+											echo " ";
+											$term = get_field('omrade', $whisky_ob->ID);
 											echo $term->name;
 								?> </div>
 						</div>

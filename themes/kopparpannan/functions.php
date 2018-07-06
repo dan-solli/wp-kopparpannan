@@ -396,67 +396,165 @@ function has_anmalning() {
     return (arr['guests'] + arr['members'] > 0);
 }
 
-///////////////////////////////////////////////////////
-// Ge title eller content ett vettigt innehåll för 
-// anmälningar, gästanmälningar, citat och whiskybetyg
-///////////////////////////////////////////////////////
 
-function save_post_mem_anm_title($post_id, $post, $update)
-{
-    if (!$update) {
-        remove_action('save_post', 'save_post_mem_anm_title');
-        $event_ob = get_field('event', $post_id);
+///////////////////////////////////////
+// Handle columns in Admin view
+///////////////////////////////////////
 
-        $current_user = wp_get_current_user();
+// Whisky
+add_filter( 'manage_kopparpannan-whisky_posts_columns', 'add_kp_whisky_columns', 5 );
+add_action( 'manage_kopparpannan-whisky_posts_custom_column', 'add_kp_whisky_column_content', 5, 2 );
 
-        wp_update_post(array(
-            'ID' => $post_id,
-            'post_title' => get_the_title($event_ob) . ": " . $current_user->display_name
-        ));
-        add_action('save_post', 'save_post_mem_anm_title', 90, 3);
-    }    
-}
-function save_post_gue_anm_title($post_id, $post, $update)
-{
-    if (!$update) {
-        remove_action('save_post', 'save_post_gue_anm_title');
-        $event_ob = get_field('event', $post_id);
-        $current_user = wp_get_current_user();
-
-        wp_update_post(array(
-            'ID' => $post_id,
-            'post_title' => get_the_title($event_ob) . ": " . 
-                            get_field('inbjuden', $post_id) . 
-                            "(" . $current_user->display_name . ")"
-        ));
-        add_action('save_post', 'save_post_gue_anm_title', 90, 3);
-    }    
-}
-function save_post_betyg_title($post_id, $post, $update) // Trasig!?!
-{
-    if (!$update) {
-        remove_action('save_post', 'save_post_betyg_title');
-        $event_ob = get_field('prov', $post_id);
-        $whisky_ob = get_field('whisky', $post_id);
-
-        wp_update_post(array(
-            'ID' => $post_id,
-            'post_title' => get_the_title($event_ob) . ": " . get_the_title($whisky_ob)
-        ));
-        add_action('save_post', 'save_post_betyg_title', 90, 3);
-    }    
-}
-function save_post_citat_title($post_id, $post, $update)
-{
-    if (!$update) {
-        remove_action('save_post', 'save_post_citat_title');
-        add_action('save_post', 'save_post_citat_title', 90, 3);
-    }    
+function add_kp_whisky_columns( $columns ) {
+   $columns['alcohol'] = 'Styrka';
+   $columns['age'] = 'Ålder';
+   $columns['omrade'] = 'Område';
+   $columns['price'] = 'Pris/Volym';
+   return $columns;
 }
 
-add_action('save_post_medlemsanmalning', 'save_post_mem_anm_title', 90, 3);
-add_action('save_post_gastanmalning', 'save_post_gue_anm_title', 90, 3);
-add_action('save_post_kp_whiskybetyg', 'save_post_betyg_title', 90, 3);
-add_action('save_post_citat', 'save_post_citat_title', 90, 3);
+function add_kp_whisky_column_content( $column, $id ) {
+  if( 'alcohol' == $column ) {
+    $whisky = get_post($id);
+    echo get_field('alkoholhalt', $whisky) . "%";
+  }
+  else if( 'age' == $column ) {
+    $whisky = get_post($id);
+    echo get_field('age', $whisky);
+  }
+  else if( 'omrade' == $column ) {
+    $whisky = get_post($id);
+    echo get_field('alkoholhalt', $whisky) . "%";
+  }
+  else if( 'price' == $column ) {
+    $whisky = get_post($id);
+    echo get_field('pris', $whisky) . "/" . get_field('volym', $whisky) . "ml";
+  }
+}
+
+// Medlemsanmälan
+add_filter( 'manage_medlemsanmalning_posts_columns', 'add_medlemsanmalning_columns', 5 );
+add_action( 'manage_medlemsanmalning_posts_custom_column', 'add_medlemsanmalning_column_content', 5, 2 );
 
 
+function add_medlemsanmalning_columns( $columns ) {
+   $columns['user'] = 'Anmäld';
+   $columns['event'] = 'Evenemang';
+   $columns['when'] = 'Tidpunkt';
+   return $columns;
+}
+
+function add_medlemsanmalning_column_content( $column, $id ) {
+  if( 'user' == $column ) {
+    $anm = get_post($id);
+    $user = get_field('user', $anm);
+    $user_ob = get_userdata($user);
+
+    echo $user_ob->display_name;
+  }
+  else if( 'event' == $column ) {
+    $anm = get_post($id);
+    $event = get_field('event', $anm);
+    echo get_the_title($event);
+  }
+  else if( 'when' == $column ) {
+    $anm = get_post($id);
+    echo $anm->post_date;
+  }
+}
+
+// Event
+// Skippar event, eftersom det ändå inte är otydligt.
+
+// Gästanmälan
+add_filter( 'manage_gastanmalning_posts_columns', 'add_gastanmalning_columns', 5 );
+add_action( 'manage_gastanmalning_posts_custom_column', 'add_gastanmalning_column_content', 5, 2 );
+
+
+function add_gastanmalning_columns( $columns ) 
+{
+    $columns['event'] = 'Evenemang';
+    $columns['inbjuden'] = 'Gäst';
+
+    $columns['telefon'] = 'Telefon';
+    $columns['epost'] = 'Epost';
+    $columns['inbjuden_av'] = 'Inbjuden av';
+    return $columns;
+}
+
+function add_gastanmalning_column_content( $column, $id ) {
+  if( 'inbjuden_av' == $column ) {
+    $user = get_field('inbjuden_av', get_post($id));
+    echo $user['display_name'];
+  }
+  else if( 'event' == $column) {
+    $ev = get_field('event', get_post($id));
+    echo $ev->post_title;
+  }
+  else if( 'inbjuden' == $column ) {
+    echo get_field('inbjuden', get_post($id));
+  }
+  else if( 'telefon' == $column ) {
+    echo get_field('telefon', get_post($id));
+  }
+  else if( 'epost' == $column ) {
+    echo get_field('epost', get_post($id));
+  }
+}
+
+// Betyg
+add_filter( 'manage_kp-whiskybetyg_posts_columns', 'add_betyg_columns', 5 );
+add_action( 'manage_kp-whiskybetyg_posts_custom_column', 'add_betyg_column_content', 5, 2 );
+
+
+function add_betyg_columns( $columns ) 
+{
+    $columns['event'] = 'Prov';
+    $columns['whisky'] = 'Whisky';
+    $columns['betyg'] = 'Betyg';
+    return $columns;
+}
+
+function add_betyg_column_content( $column, $id ) {
+  if( 'whisky' == $column ) {
+    $ev = get_field('whisky', get_post($id));
+    echo $ev->post_title;
+  }
+  else if( 'event' == $column) {
+    $ev = get_field('prov', get_post($id));
+    //print_r($ev);
+    echo $ev->post_title;
+  }
+  else if( 'betyg' == $column ) {
+    echo get_field('betyg', get_post($id));
+  }
+}
+
+// Citat
+add_filter( 'manage_citat_posts_columns', 'add_citat_columns', 5 );
+add_action( 'manage_citat_posts_custom_column', 'add_citat_column_content', 5, 2 );
+
+
+function add_citat_columns( $columns ) 
+{
+    $columns['event'] = 'Prov';
+    $columns['whisky'] = 'Whisky';
+    $columns['user'] = 'Upphovsperson';
+    return $columns;
+}
+
+function add_citat_column_content( $column, $id ) {
+  if( 'whisky' == $column ) {
+    $ev = get_field('whisky', get_post($id));
+    echo $ev->post_title;
+  }
+  else if( 'event' == $column) {
+    $ev = get_field('event', get_post($id));
+    //print_r($ev);
+    echo $ev->post_title;
+  }
+  else if( 'user' == $column ) {
+    $user = get_field('user', get_post($id));
+    echo $user['display_name'];
+  }
+}

@@ -395,3 +395,68 @@ function has_anmalning() {
     $arr = calculate_signup_count(get_the_ID());
     return (arr['guests'] + arr['members'] > 0);
 }
+
+///////////////////////////////////////////////////////
+// Ge title eller content ett vettigt innehåll för 
+// anmälningar, gästanmälningar, citat och whiskybetyg
+///////////////////////////////////////////////////////
+
+function save_post_mem_anm_title($post_id, $post, $update)
+{
+    if (!$update) {
+        remove_action('save_post', 'save_post_mem_anm_title');
+        $event_ob = get_field('event', $post_id);
+
+        $current_user = wp_get_current_user();
+
+        wp_update_post(array(
+            'ID' => $post_id,
+            'post_title' => get_the_title($event_ob) . ": " . $current_user->display_name
+        ));
+        add_action('save_post', 'save_post_mem_anm_title', 90, 3);
+    }    
+}
+function save_post_gue_anm_title($post_id, $post, $update)
+{
+    if (!$update) {
+        remove_action('save_post', 'save_post_gue_anm_title');
+        $event_ob = get_field('event', $post_id);
+        $current_user = wp_get_current_user();
+
+        wp_update_post(array(
+            'ID' => $post_id,
+            'post_title' => get_the_title($event_ob) . ": " . 
+                            get_field('inbjuden', $post_id) . 
+                            "(" . $current_user->display_name . ")"
+        ));
+        add_action('save_post', 'save_post_gue_anm_title', 90, 3);
+    }    
+}
+function save_post_betyg_title($post_id, $post, $update) // Trasig!?!
+{
+    if (!$update) {
+        remove_action('save_post', 'save_post_betyg_title');
+        $event_ob = get_field('prov', $post_id);
+        $whisky_ob = get_field('whisky', $post_id);
+
+        wp_update_post(array(
+            'ID' => $post_id,
+            'post_title' => get_the_title($event_ob) . ": " . get_the_title($whisky_ob)
+        ));
+        add_action('save_post', 'save_post_betyg_title', 90, 3);
+    }    
+}
+function save_post_citat_title($post_id, $post, $update)
+{
+    if (!$update) {
+        remove_action('save_post', 'save_post_citat_title');
+        add_action('save_post', 'save_post_citat_title', 90, 3);
+    }    
+}
+
+add_action('save_post_medlemsanmalning', 'save_post_mem_anm_title', 90, 3);
+add_action('save_post_gastanmalning', 'save_post_gue_anm_title', 90, 3);
+add_action('save_post_kp_whiskybetyg', 'save_post_betyg_title', 90, 3);
+add_action('save_post_kp_citat', 'save_post_citat_title', 90, 3);
+
+

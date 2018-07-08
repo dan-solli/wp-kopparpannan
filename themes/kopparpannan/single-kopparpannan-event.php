@@ -28,6 +28,11 @@
       get_template_part('assets/t/description', 'kopparpannan-event');
       get_template_part('assets/t/content-whisky', 'kopparpannan-event');
       get_template_part('assets/t/common', 'attachments');
+      get_template_part('assets/t/participants', 'kopparpannan-event');
+      get_template_part('assets/t/guest-signup', 'kopparpannan-event');
+?> 
+	<div class="ui horizontal divider"></div> 
+<?php
 			get_template_part('assets/t/common', 'footer');
 ?>
 </article>

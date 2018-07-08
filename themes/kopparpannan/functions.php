@@ -231,9 +231,10 @@ function signup_user_for_event()
         wp_verify_nonce($_POST['signup_nonce'], 
                         'signup-event-' . $_POST['event_id']))
     {
+        $user_ob = get_userdata($_POST['user_id']);
         $postargs = array(
             'post_author' => $_POST['user_id'],
-            'post_title' => '',
+            'post_title' => get_the_title($_POST['event_id']) . ": " . $user_ob->display_name,
             'post_content' => '',
             'post_status' => 'publish',
             'post_type'   => 'medlemsanmalning',
@@ -311,7 +312,7 @@ function signup_guest_for_event()
     {
         $postargs = array(
             'post_author' => $_POST['user_id'],
-            'post_title' => $_POST['namn'] . "@" . $_POST['event_id'],
+            'post_title' => $_POST['namn'] . ": " . get_the_title($_POST['event_id']),
             'post_content' => '',
             'post_status' => 'publish',
             'post_type'   => 'gastanmalning',

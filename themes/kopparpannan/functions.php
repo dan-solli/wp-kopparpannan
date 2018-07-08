@@ -222,6 +222,7 @@ function the_attachment_icon($subtype) {
 add_action('admin_post_signup_for_event', 'signup_user_for_event');
 add_action('admin_post_unsignup_for_event', 'unsignup_user_for_event');
 add_action('admin_post_signup_guest_for_event', 'signup_guest_for_event');
+add_action('admin_post_remove_guest_for_event', 'remove_guest_for_event');
 
 function signup_user_for_event()
 {
@@ -237,14 +238,13 @@ function signup_user_for_event()
             'post_status' => 'publish',
             'post_type'   => 'medlemsanmalning',
             'comment_status' => 'closed',
-            'meta_input' => array(
-                'event' => $_POST['event_id'],
-                'user'  => $_POST['user_id']
-            ),
         );
         $post_id = wp_insert_post($postargs, true);
         if (is_wp_error($post_id)) {
             echo $post_id->get_error_message();
+        } else {
+            update_field('field_5b3c84bc65155', $_POST['event_id'], $post_id);
+            update_field('field_5b3c852d65156', $_POST['user_id'], $post_id);
         }
     }
     header("Location: {$_SERVER['HTTP_REFERER']}");
@@ -283,9 +283,54 @@ function unsignup_user_for_event()
     exit;
 }
 
-function toggle_signup_guest_for_event()
+function remove_guest_for_event() 
 {
-    echo "<pre>" + var_dump($_POST) + "</pre>";
+    if (isset($_POST['id']) and
+        isset($_POST['remove_signup_nonce']) and 
+        wp_verify_nonce($_POST['remove_signup_nonce'], 
+                        'remove-guest-' . $_POST['id']))
+    {
+        wp_delete_post($_POST['id'], false);
+        wp_reset_postdata();
+    }
+    else {
+        header("Location: http://www.st.nu");
+        exit;
+    }
+    header("Location: {$_SERVER['HTTP_REFERER']}");
+    exit;
+
+}
+
+function signup_guest_for_event()
+{
+    if (isset($_POST['event_id']) and
+        isset($_POST['signup_nonce']) and 
+        wp_verify_nonce($_POST['signup_nonce'], 
+                        'signup-guest-' . $_POST['event_id']))
+    {
+        $postargs = array(
+            'post_author' => $_POST['user_id'],
+            'post_title' => $_POST['namn'] . "@" . $_POST['event_id'],
+            'post_content' => '',
+            'post_status' => 'publish',
+            'post_type'   => 'gastanmalning',
+            'comment_status' => 'closed'
+        );
+        
+        $post_id = wp_insert_post($postargs, true);
+        if (is_wp_error($post_id)) {
+            echo $post_id->get_error_message();
+        } else {
+            update_field('field_5b3c87c335bae', $_POST['event_id'], $post_id);
+            update_field('field_5b3c870854576', $_POST['user_id'], $post_id);
+            update_field('field_5b3c872954577', $_POST['namn'], $post_id);
+            update_field('field_5b3c874f54578', $_POST['telefon'], $post_id);
+            update_field('field_5b3c876d54579', $_POST['epost'], $post_id);
+        }
+    }
+    header("Location: {$_SERVER['HTTP_REFERER']}");
+    exit;
 }
 
 function is_user_signed_up($event_id) {
@@ -316,7 +361,7 @@ function calculate_signups($id) {
     $arr = calculate_signup_count($id);
 
     if ($arr['guests'] > 0) {
-        echo $arr['members'] + " + " + $arr['guests'];
+        echo $arr['members'] . " + " . $arr['guests'];
     } else {
         echo $arr['members'];
     }
@@ -460,9 +505,8 @@ function add_medlemsanmalning_column_content( $column, $id ) {
   if( 'user' == $column ) {
     $anm = get_post($id);
     $user = get_field('user', $anm);
-    $user_ob = get_userdata($user);
 
-    echo $user_ob->display_name;
+    echo $user['display_name'];
   }
   else if( 'event' == $column ) {
     $anm = get_post($id);
@@ -496,7 +540,7 @@ function add_gastanmalning_columns( $columns )
 
 function add_gastanmalning_column_content( $column, $id ) {
   if( 'inbjuden_av' == $column ) {
-    $user = get_field('inbjuden_av', get_post($id));
+    $user = get_field('inbjuden_av');
     echo $user['display_name'];
   }
   else if( 'event' == $column) {
@@ -529,12 +573,11 @@ function add_betyg_columns( $columns )
 
 function add_betyg_column_content( $column, $id ) {
   if( 'whisky' == $column ) {
-    $ev = get_field('whisky', get_post($id));
+    $ev = get_post(get_field('whisky', get_post($id)));
     echo $ev->post_title;
   }
   else if( 'event' == $column) {
-    $ev = get_field('prov', get_post($id));
-    //print_r($ev);
+    $ev = get_post(get_field('prov', get_post($id)));
     echo $ev->post_title;
   }
   else if( 'betyg' == $column ) {
@@ -557,17 +600,16 @@ function add_citat_columns( $columns )
 
 function add_citat_column_content( $column, $id ) {
   if( 'whisky' == $column ) {
-    $ev = get_field('whisky', get_post($id));
+    $ev = get_post(get_field('whisky', get_post($id)));
     echo $ev->post_title;
   }
   else if( 'event' == $column) {
-    $ev = get_field('event', get_post($id));
-    //print_r($ev);
+    $ev = get_post(get_field('event', get_post($id)));
     echo $ev->post_title;
   }
   else if( 'user' == $column ) {
-    $user = get_field('user', get_post($id));
-    echo $user['display_name'];
+    $user = get_userdata(get_field('user', get_post($id)));
+    echo $user->display_name;
   }
 }
 

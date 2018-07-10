@@ -147,9 +147,9 @@
 								</div>
 							</div>
 						</div>
+						<?php get_template_part('assets/t/common', 'footer'); ?> 
 					</article>
 
-<?php comments_template(); ?>
 <?php endwhile; ?>
 
 <?php get_footer(); ?>

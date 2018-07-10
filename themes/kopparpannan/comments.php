@@ -1,9 +1,9 @@
 <?php if ( have_comments() ) : ?>
 			<div class="ui segment">
-	    	<h3 class="ui dividing header"> 
+	    	<h4 class="ui dividing header"> 
 	    		<i class="comment outline icon"> </i> 
-	    		<?php comments_number('Ingen Kommentar', 'En Kommentar', '% Kommentarer' );?>
-	    	</h3>
+	    		<?php comments_number('Ingen kommentar', 'En kommentar', '% kommentarer' );?>
+	    	</h4>
 							<div class="content">
 								<div class="description">
 									<div class="ui comments">
@@ -25,7 +25,7 @@ $fields =  array(
 );
 $args = array(
     'id_form'           => 'commentform',
-    'class_form'        => 'comment-form',
+    'class_form'        => 'comment-form ui form',
     'id_submit'         => 'submit',
     'class_submit'      => 'submit',
     'name_submit'       => 'submit',

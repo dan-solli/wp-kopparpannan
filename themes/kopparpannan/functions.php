@@ -385,7 +385,7 @@ function calculate_signup_count($id) {
     );
     $result = new WP_Query($args);
     $mem_cnt = $result->post_count;
-    wp_reset_postdata();
+    //wp_reset_postdata();
 
     $args = array(
         'post_type' => 'gastanmalning',
@@ -399,7 +399,7 @@ function calculate_signup_count($id) {
     );
     $result = new WP_Query($args);
     $gue_cnt = $result->post_count;
-    wp_reset_postdata();
+    //wp_reset_postdata();
 
     return array(
         'members' => $mem_cnt, 

@@ -10,7 +10,7 @@
         </span>
         <span title="Kommentarer" class="comments">
           <i class="comment outline icon"></i>
-          <?php echo "0"; //the_comments_number(); ?>
+          <?php echo get_comments_number(); ?>
         </span>
       </small>
     </div>

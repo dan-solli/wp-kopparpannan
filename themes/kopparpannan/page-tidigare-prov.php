@@ -1,7 +1,8 @@
 
 <?php
 /**
- * Kommande prov
+ * Tidigare prov
+ Template Name: Tidigare prov
  *
  * @package Kopparpannan
  * @since Kopparpannan 0.1
@@ -15,11 +16,7 @@
 	$args = array (
 		'post_type' 			=> 'kopparpannan-event',
 		'posts_per_page' 	=> -1,
-		'order' => 'DESC',
-		'meta_key' => 'tid',
-		'meta_type' => 'DATETIME',
-		'orderby' => 'meta_value_datetime',
-		'meta_query'			=> array( array(
+			'meta_query'			=> array( array(
 			'key' 		=> 'tid',
 			'value' 	=> $date_now,
 			'type' 		=> 'NUM',
@@ -50,6 +47,8 @@
 			</article>
 
 <?php } 
-		} ?>
+		} 
+    wp_reset_postdata(); 
+		?>
 
 <?php get_footer(); ?>

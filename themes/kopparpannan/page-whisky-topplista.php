@@ -1,6 +1,7 @@
 <?php
 /**
  * Topplista
+ Template Name: Whisky Topplista
  *
  * @package Kopparpannan
  * @since Kopparpannan 0.1

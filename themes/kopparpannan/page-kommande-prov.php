@@ -1,7 +1,7 @@
 
 <?php
-/**
- * Kommande prov
+/*
+ Template Name: Kommande prov
  *
  * @package Kopparpannan
  * @since Kopparpannan 0.1
@@ -35,6 +35,7 @@
 
 			?> 
 			    <div class="description">
+
 			      <?php the_content(); ?> 
 			    </div>
 			    <div class="extra">
@@ -46,6 +47,8 @@
 			</article>
 
 <?php } 
-		} ?>
+		} 
+    wp_reset_postdata(); 
+		?>
 
 <?php get_footer(); ?>

@@ -1,6 +1,7 @@
 <?php
 /**
  * Medlemmar
+ Template Name: Medlemslista
  *
  * @package Kopparpannan
  * @since Kopparpannan 0.1

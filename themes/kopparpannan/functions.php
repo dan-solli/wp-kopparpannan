@@ -662,3 +662,34 @@ function the_flag($whisky_id) {
         echo "<i class=\"$country flag\"> </i>";
     }
 }
+
+/// Comments
+
+
+function format_comment($comment, $args, $depth)
+{
+    echo '<div class="comment">' . "\n" .
+         '<a class="avatar">' ."\n" .
+             get_avatar(get_current_user_id()) ."\n" .
+         '</a>' ."\n" .
+             '<div class="content">' ."\n" .
+                '<a class="author">' . get_comment_author() . '</a>' ."\n" .
+                 '<div class="metadata">' ."\n" .
+                    '<span class="date">' . get_comment_date() . '</span>' ."\n" .
+                 '</div>' ."\n" .
+                 '<div class="text">' ."\n" .
+                    get_comment_text() ."\n" .
+                 '</div>' ."\n" .
+                 '<div class="actions">' ."\n" .
+                 get_comment_reply_link(array_merge($args, array(
+                    'max-depth' => get_option('thread_comments_depth'),
+                    'depth' => $depth,
+                ))) . "\n" .
+                 '</div>' ."\n" .
+             '</div>';
+}
+
+function format_comment_end()
+{
+    echo "</div>\n";
+}

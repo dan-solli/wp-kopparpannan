@@ -653,6 +653,9 @@ function the_flag($whisky_id) {
         case 'USA':
             $country = 'us';
             break;
+        case 'Irland':
+            $country = 'ie';
+            break;
         default:
             $country = null;
             break;
@@ -692,4 +695,14 @@ function format_comment($comment, $args, $depth)
 function format_comment_end()
 {
     echo "</div>\n";
+}
+
+// Lab
+add_filter('acf/fields/post_object/result', 'my_whisky_name_fixed', 10, 4);
+
+function my_whisky_name_fixed($title, $post, $field, $post_id) {
+    if ($post->post_type == 'kopparpannan-whisky') {
+        $title .= ' (' . explode(" ", $post->post_date)[0] . ')';
+    }
+    return $title;
 }

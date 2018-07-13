@@ -698,11 +698,60 @@ function format_comment_end()
 }
 
 // Lab
-add_filter('acf/fields/post_object/result', 'my_whisky_name_fixed', 10, 4);
+add_filter('acf/fields/post_object/result', 'my_acf_fields_titles_fixed', 10, 4);
+//add_filter('acf/fields/post_object/query/key=field_5b27cc03a7210', 'my_acf_sort_event_order', 99, 3);
 
-function my_whisky_name_fixed($title, $post, $field, $post_id) {
+function my_acf_fields_titles_fixed($title, $post, $field, $post_id) {
     if ($post->post_type == 'kopparpannan-whisky') {
         $title .= ' (' . explode(" ", $post->post_date)[0] . ')';
     }
     return $title;
 }
+
+/*
+function my_acf_sort_event_order($args, $field, $post_id) {
+    if ($args['post_type'] == 'kopparpannan-event') {
+        echo "<pre>";
+        print_r($args);
+        echo "***";
+        print_r($field);
+        echo "</pre>";
+    }
+
+    $args['orderby'] = 'post_date';
+    $args['order'] = 'DESC';
+    $args['post_status'] = array('publish');
+    $args['posts_per_page'] = -1;
+
+    unset($args['numberposts']);
+    unset($args['suppress_filters']);
+    unset($args['sort_column']);
+    unset($args['sort_order']);
+
+        echo "<pre>";
+        print_r($args);
+        echo "</pre>";
+
+    return $args;
+}
+
+
+(
+    [numberposts] => -1
+    [post_type] => kopparpannan-event
+    [orderby] => title
+    [order] => ASC
+    [post_status] => Array
+        (
+            [0] => publish
+            [1] => private
+            [2] => draft
+            [3] => inherit
+            [4] => future
+        )
+
+    [suppress_filters] => 
+    [sort_column] => menu_order, post_title
+    [sort_order] => ASC
+)
+*/

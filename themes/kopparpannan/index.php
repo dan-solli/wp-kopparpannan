@@ -36,5 +36,5 @@
 </article>
 
 <?php endwhile; ?>
-
+<?php get_template_part('assets/t/common', 'pagination'); ?>
 <?php get_footer(); ?>

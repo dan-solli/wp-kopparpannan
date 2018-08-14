@@ -70,7 +70,11 @@
 ?>
 				<section class="ui raised card" id="memorable_quotes">
 					<div class="content">
-						<div class="header"> <?php echo $whisky_ob->post_title; ?> </div>
+						<div class="header"> 
+							<a href="<?php echo get_permalink($whisky_ob); ?>">
+								<?php echo $whisky_ob->post_title; ?> 
+							</a>
+						</div>
 						<div class="meta"> 
 							<i title="Tidpunkt" class="calendar icon"></i> 
 								<?php echo explode(" ", get_field('tid', $event_ob))[0]; ?> </div>

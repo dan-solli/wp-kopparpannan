@@ -442,12 +442,12 @@ function has_anmalning() {
     return (arr['guests'] + arr['members'] > 0);
 }
 
-function has_citat() {
+function has_citat($whisky_id) {
     $args = array( 
         'post_type' => 'citat',
         'posts_per_page' => -1,
         'meta_key' => 'whisky',
-        'meta_value' => get_the_ID(),
+        'meta_value' => $whisky_id,
     );
     $queue = new WP_Query($args);
     $bool = ($queue->post_count > 0); 
@@ -810,3 +810,21 @@ function get_kopparpannan_pagination() {
     }
     return 0;
 }
+
+/*
+function add_loginout_navitem($items, $args ) {
+    if( $args->theme_location == 'header_nav' ) {
+        if ( !(is_user_logged_in()) ) {
+            $login_item = '<li class="nav-login"><a href="/login">Log In</a></li>';
+        }
+        else {
+            $login_item = '<li class="nav-login">' . wp_loginout($_SERVER['REQUEST_URI'], false) . '</li>';
+        }
+        $items .= $login_item;
+    }
+    print_r($items);
+    return $items;
+}
+
+add_filter('wp_nav_menu_items', 'add_loginout_navitem', 10, 2);
+*/

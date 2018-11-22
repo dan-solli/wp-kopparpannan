@@ -19,7 +19,7 @@
 <?php } ?>
     </div>    
 <?php
-  if (is_single() and is_future_event()) {
+  if (is_single() and is_future_event() and get_current_user_id()) {
     $sup = is_user_signed_up(get_the_ID()); ?>
     <div title="Anmälningsknapp" class="right floated content">
       <form action="<?php echo get_site_url(); ?>/wp-admin/admin-post.php" method="post" class="ui form">

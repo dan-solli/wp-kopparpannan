@@ -11,14 +11,15 @@
 
 
 <?php while ( have_posts() ) : the_post() ?>
-					<article id="post-<?php the_ID(); ?>" class="ui raised segments">
+	<?php $saved_whisky_id = get_the_ID(); ?>
+					<article id="post-<?php $saved_whisky_id; ?>" class="ui raised segments">
 						<div class="ui segment">
 							<div class="content">
 								<div class="header">
 									<h2> 
 										<?php the_title(); 
 													echo " ";
-													the_flag(get_the_ID()); ?>
+													the_flag($saved_whisky_id); ?>
 									</h2>
 								</div>
 							</div>
@@ -103,7 +104,7 @@
 								</div>
 							</div>
 						</div>
-<?php if (has_citat()) { ?> 								
+<?php if (has_citat($saved_whisky_id)) { ?> 								
 						<div class="ui segment">
 							<div class="content">
 								<div class="header"> <h2> <i class="quote left icon"> </i> </h2> </div>

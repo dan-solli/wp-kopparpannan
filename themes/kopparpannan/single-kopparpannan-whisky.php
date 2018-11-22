@@ -31,7 +31,6 @@
 <?php 	the_post_thumbnail( 'full', array( 'class'  => 'ui centered small image' ) ); ?>
 							</div>
 <?php } ?>
-
 							<div class="ui segment">
 								<div class="content">
 									<div class="description">
@@ -132,8 +131,13 @@
 											<cite>
 										<?php the_title() ?>
 											</cite><br />
-										<?php echo $user_ob['display_name'] . ", " . 
-										      explode(" ", get_field('tid', $prov_ob))[0]; ?>
+										<?php 
+											if ($user_ob and strlen($user_ob['display_name']) > 0) {
+												echo $user_ob['display_name'] . ", " . explode(" ", get_field('tid', $prov_ob))[0]; 
+											} else {
+												echo explode(" ", get_field('tid', $prov_ob))[0];
+											}
+										?>
 									</blockquote>
 <?php } } ?>									
 								</div>

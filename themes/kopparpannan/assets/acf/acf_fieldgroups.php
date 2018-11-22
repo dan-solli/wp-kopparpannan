@@ -1,5 +1,11 @@
 <?php
 
+add_filter('acf/update_value/type=date_time_picker', 'my_update_value_date_time_picker', 10, 3);
+
+function my_update_value_date_time_picker( $value, $post_id, $field ) {
+	return strtotime($value);
+}
+
 if( function_exists('acf_add_local_field_group') )
 {
 	acf_add_local_field_group(array(

@@ -19,6 +19,7 @@
 					);
 
 					$prov_query = new WP_Query( $args );
+					//echo "<pre>"; var_dump($prov_query); echo "</pre>\n";
 					if ($prov_query->have_posts()) {
 						while ($prov_query->have_posts()) {
 							$prov_query->the_post();

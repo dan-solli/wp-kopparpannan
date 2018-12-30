@@ -6,7 +6,8 @@ include_once('assets/mb/mb_post_types.php');
 // Make sure custom post types are added by default to The Loop
 function add_custom_post_type_to_the_loop( $query ) {
 	if ($query->is_home() && $query->is_main_query() ) {
-		$query->set('post_type', array('post', 'kopparpannan-whisky', 'kopparpannan-event'));
+        //$query->set('post_type', array('post', 'kopparpannan-whisky', 'kopparpannan-event'));
+        $query->set('post_type', array('post', 'kopparpannan-event'));
 	}
 }
 add_action('pre_get_posts', 'add_custom_post_type_to_the_loop');
@@ -80,6 +81,11 @@ function clean_custom_menu( $theme_location ) {
             $title = $menu_item->title;
             $parent_id = $menu_item->menu_item_parent;
             $id = $menu_item->ID;
+            echo "<!-- $link -> $title -> $parent_id -> $id -->\n";
+
+            if (!get_current_user_id() and ($id == 377 or $parent_id == 377 or $id == 383)) { // Medlemslistor & Protokoll
+                continue;
+            }
 
             if (array_key_exists($id, $store)) {
                 if ($submenu) {

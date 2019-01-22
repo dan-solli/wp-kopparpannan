@@ -5,6 +5,7 @@
     $args = array(
       'post_type' => 'medlemsanmalning',
       'post_status' => 'publish', 
+      'posts_per_page' => -1,
       'meta_query' => array(
         array(
             'key' => 'event',
@@ -47,6 +48,7 @@
 	if ($arr['guests'] > 0) { 
     $args = array(
       'post_type' => 'gastanmalning',
+      'posts_per_page' => -1,
       'post_status' => 'publish', 
       'meta_query' => array(
         array(

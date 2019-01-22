@@ -385,6 +385,7 @@ function calculate_signup_count($id) {
     $args = array(
         'post_type' => 'medlemsanmalning',
         'post_status' => 'publish', 
+        'posts_per_page' => -1,
         'meta_query' => array(
             array(
                 'key' => 'event',
@@ -399,6 +400,7 @@ function calculate_signup_count($id) {
     $args = array(
         'post_type' => 'gastanmalning',
         'post_status' => 'publish', 
+        'posts_per_page' => -1,
         'meta_query' => array(
             array(
                 'key' => 'event',

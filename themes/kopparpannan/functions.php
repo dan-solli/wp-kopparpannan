@@ -81,6 +81,11 @@ function clean_custom_menu( $theme_location ) {
             $title = $menu_item->title;
             $parent_id = $menu_item->menu_item_parent;
             $id = $menu_item->ID;
+            echo "<!-- $link -> $title -> $parent_id -> $id -->\n";
+
+            if (!get_current_user_id() and ($id == 377 or $parent_id == 377 or $id == 383)) { // Medlemslistor & Protokoll
+                continue;
+            }
 
             if (array_key_exists($id, $store)) {
                 if ($submenu) {
@@ -380,6 +385,7 @@ function calculate_signup_count($id) {
     $args = array(
         'post_type' => 'medlemsanmalning',
         'post_status' => 'publish', 
+        'posts_per_page' => -1,
         'meta_query' => array(
             array(
                 'key' => 'event',
@@ -394,6 +400,7 @@ function calculate_signup_count($id) {
     $args = array(
         'post_type' => 'gastanmalning',
         'post_status' => 'publish', 
+        'posts_per_page' => -1,
         'meta_query' => array(
             array(
                 'key' => 'event',

@@ -1,6 +1,6 @@
 <?php
 /**
- * The main whisky showing page
+ * The main event showing page
  *
  * @package Kopparpannan
  * @since Kopparpannan 0.1

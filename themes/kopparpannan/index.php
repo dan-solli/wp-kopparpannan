@@ -25,7 +25,7 @@
 ?>
 
     <div class="description">
-      <?php the_content(); ?> 
+      <?php is_single() ? the_content() : the_excerpt(); ?> 
     </div>
     <div class="extra">
       <?php get_template_part('assets/t/common', 'attachments'); ?>

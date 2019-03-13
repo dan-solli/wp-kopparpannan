@@ -1,4 +1,8 @@
     <div class="ui small divided horizontal list">
+      <div title="Tidpunkt" class="item">
+        <i title="Tidpunkt" class="calendar icon"></i> 
+        <div class="content"> <?php the_field('tid'); ?> </div>
+      </div>
       <div title="Provledare" class="item">
         <i class="user circle icon"></i> 
         <div class="content"> <?php the_field('provledare'); ?> </div>

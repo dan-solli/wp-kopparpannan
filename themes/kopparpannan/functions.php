@@ -6,7 +6,8 @@ include_once('assets/mb/mb_post_types.php');
 // Make sure custom post types are added by default to The Loop
 function add_custom_post_type_to_the_loop( $query ) {
 	if ($query->is_home() && $query->is_main_query() ) {
-		$query->set('post_type', array('post', 'kopparpannan-whisky', 'kopparpannan-event'));
+        //$query->set('post_type', array('post', 'kopparpannan-whisky', 'kopparpannan-event'));
+        $query->set('post_type', array('post', 'kopparpannan-event'));
 	}
 }
 add_action('pre_get_posts', 'add_custom_post_type_to_the_loop');

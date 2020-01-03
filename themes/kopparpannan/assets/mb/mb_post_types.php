@@ -36,7 +36,7 @@ function kopparpannan_register_post_type() {
 		'query_var' => true,
 		'can_export' => true,
 		'rewrite_no_front' => false,
-		'supports' => 'title',
+		'supports' => array('title'),
 		'rewrite' => true,
 	);
 

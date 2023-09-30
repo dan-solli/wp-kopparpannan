@@ -621,7 +621,11 @@ function add_citat_column_content( $column, $id ) {
   }
   else if( 'user' == $column ) {
     $user = get_userdata(get_field('user', get_post($id)));
-    echo $user->display_name;
+    if (!$user) {
+        echo "Okänd";
+    } else {
+        echo $user->display_name;
+    }
   }
 }
 
